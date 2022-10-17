@@ -8,10 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserService = exports.updateUserService = exports.getUserByIdService = exports.getAllUsersService = exports.createUserService = void 0;
+exports.getUserByEmailService = exports.deleteUserService = exports.updateUserService = exports.getUserByIdService = exports.getAllUsersService = exports.createUserService = void 0;
 const DBConfig_1 = require("../config/DBConfig");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const createUserService = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    const salt = yield bcryptjs_1.default.genSalt(10);
+    user.password = yield bcryptjs_1.default.hash(user.password, salt);
     const query = `
         INSERT INTO user (name, email, password, about) 
         VALUES (
@@ -21,7 +27,9 @@ const createUserService = (user) => __awaiter(void 0, void 0, void 0, function* 
             "${user.about}"
         )
     `;
-    const response = yield DBConfig_1.pool.query(query);
+    yield DBConfig_1.pool.query(query);
+    const response = yield (0, exports.getUserByEmailService)(user.email);
+    delete response[0].password;
     return response[0];
 });
 exports.createUserService = createUserService;
@@ -63,3 +71,11 @@ const deleteUserService = (id) => __awaiter(void 0, void 0, void 0, function* ()
     return apiResponse;
 });
 exports.deleteUserService = deleteUserService;
+const getUserByEmailService = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+        SELECT * FROM user WHERE LOWER(email) = LOWER("${email}")
+    `;
+    const response = yield DBConfig_1.pool.query(query);
+    return response[0];
+});
+exports.getUserByEmailService = getUserByEmailService;

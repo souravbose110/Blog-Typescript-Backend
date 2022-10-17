@@ -19,6 +19,7 @@ app.use("/api/user", routes_1.UserHandler);
 app.use("/api/category", routes_1.CategoryHandler);
 app.use("/api", routes_1.CommentHandler);
 app.use("/api", routes_1.PostHandler);
+app.use("/api/auth", routes_1.AuthHandler);
 app.listen(PORT, () => {
     console.log(`[SERVER] : Server is running on PORT : ${PORT}`);
 });

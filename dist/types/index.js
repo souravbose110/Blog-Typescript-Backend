@@ -18,3 +18,4 @@ __exportStar(require("./user.types"), exports);
 __exportStar(require("./category.types"), exports);
 __exportStar(require("./comment.types"), exports);
 __exportStar(require("./post.types"), exports);
+__exportStar(require("./auth.types"), exports);

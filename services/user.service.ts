@@ -1,7 +1,12 @@
 import { pool } from "../config/DBConfig";
 import { User } from "../types";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const createUserService = async (user: User) => {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+
     const query = `
         INSERT INTO user (name, email, password, about) 
         VALUES (
@@ -12,7 +17,11 @@ export const createUserService = async (user: User) => {
         )
     `;
 
-    const response = await pool.query(query);
+    await pool.query(query);
+
+    const response = await getUserByEmailService(user.email);
+
+    delete response[0].password;
 
     return response[0];
 };
@@ -62,4 +71,14 @@ export const deleteUserService = async (id: number) => {
     };
 
     return apiResponse;
+};
+
+export const getUserByEmailService = async (email: string) => {
+    const query = `
+        SELECT * FROM user WHERE LOWER(email) = LOWER("${email}")
+    `;
+
+    const response: any = await pool.query(query);
+
+    return response[0];
 };

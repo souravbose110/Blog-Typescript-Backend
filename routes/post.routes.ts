@@ -9,19 +9,20 @@ import {
     searchPosts,
     updatePost,
 } from "../controllers";
+import { protect } from "../middlewares/auth.middleware";
 
 const router: Router = express.Router();
 
-router.post("/user/:userId/category/:categoryId/post", createPost);
-router.get("/user/:userId/post", getPostsByUser);
-router.get("/category/:categoryId/post", getPostsByCategory);
-router.get("/post", getAllPosts);
+router.post("/user/:userId/category/:categoryId/post", protect, createPost);
+router.get("/user/:userId/post", protect, getPostsByUser);
+router.get("/category/:categoryId/post", protect, getPostsByCategory);
+router.get("/post", protect, getAllPosts);
 router
     .route("/post/:postId")
-    .get(getPostsById)
-    .put(updatePost)
-    .delete(deletePost);
+    .get(protect, getPostsById)
+    .put(protect, updatePost)
+    .delete(protect, deletePost);
 
-router.get("/post/search/:keyword", searchPosts);
+router.get("/post/search/:keyword", protect, searchPosts);
 
 export default router;

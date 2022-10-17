@@ -49,21 +49,15 @@ const getPostsByCategoryService = (id) => __awaiter(void 0, void 0, void 0, func
     return response[0];
 });
 exports.getPostsByCategoryService = getPostsByCategoryService;
-const getAllPostsService = (pageNumber = 1, pageSize = 10, sortBy = "post_id", sortDir = "asc") => __awaiter(void 0, void 0, void 0, function* () {
+const getAllPostsService = (pageNumber, pageSize, sortBy, sortDir) => __awaiter(void 0, void 0, void 0, function* () {
     if (sortDir !== "asc") {
         sortDir = "desc";
     }
     sortDir = sortDir.toUpperCase();
-    // const query = `
-    //     SELECT * FROM post
-    //     ORDER BY "${sortBy}" "${sortDir}"
-    //     OFFSET "${(pageNumber - 1) * pageSize}" ROWS
-    //     FETCH NEXT "${pageSize}" ROWS ONLY
-    // `;
     const query = `
         SELECT * FROM post
-        ORDER BY "${sortBy}" "${sortDir}"
-        OFFSET "${(pageNumber - 1) * pageSize}" ROWS
+        ORDER BY ${sortBy} ${sortDir}
+        LIMIT ${pageSize} OFFSET ${(pageNumber - 1) * pageSize}
     `;
     const response = yield DBConfig_1.pool.query(query);
     return response[0];

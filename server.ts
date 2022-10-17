@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import {
+    AuthHandler,
     CategoryHandler,
     CommentHandler,
     PostHandler,
@@ -24,6 +25,7 @@ app.use("/api/user", UserHandler);
 app.use("/api/category", CategoryHandler);
 app.use("/api", CommentHandler);
 app.use("/api", PostHandler);
+app.use("/api/auth", AuthHandler);
 
 app.listen(PORT, () => {
     console.log(`[SERVER] : Server is running on PORT : ${PORT}`);

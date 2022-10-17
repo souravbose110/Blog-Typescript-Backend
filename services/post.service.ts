@@ -46,26 +46,20 @@ export const getPostsByCategoryService = async (id: number) => {
 };
 
 export const getAllPostsService = async (
-    pageNumber: number = 1,
-    pageSize: number = 10,
-    sortBy: string = "post_id",
-    sortDir: string = "asc"
+    pageNumber: number,
+    pageSize: number,
+    sortBy: string,
+    sortDir: string
 ) => {
     if (sortDir !== "asc") {
         sortDir = "desc";
     }
     sortDir = sortDir.toUpperCase();
-    // const query = `
-    //     SELECT * FROM post
-    //     ORDER BY "${sortBy}" "${sortDir}"
-    //     OFFSET "${(pageNumber - 1) * pageSize}" ROWS
-    //     FETCH NEXT "${pageSize}" ROWS ONLY
-    // `;
 
     const query = `
         SELECT * FROM post
-        ORDER BY "${sortBy}" "${sortDir}"
-        OFFSET "${(pageNumber - 1) * pageSize}" ROWS
+        ORDER BY ${sortBy} ${sortDir}
+        LIMIT ${pageSize} OFFSET ${(pageNumber - 1) * pageSize}
     `;
 
     const response = await pool.query(query);
@@ -77,7 +71,6 @@ export const getPostsByIdService = async (id: number) => {
     const query = `
         SELECT * from post WHERE post_id = "${id}"
     `;
-
     const response = await pool.query(query);
 
     return response[0];

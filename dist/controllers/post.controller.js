@@ -50,20 +50,25 @@ const getPostsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getPostsByCategory = getPostsByCategory;
 const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const _pageNumber = req.params.pageNumber;
-    // const pageNumber: number = +_pageNumber;
-    // const _pageSize = req.params.pageSize;
-    // const pageSize: number = +_pageSize;
-    // const sortBy = req.params.sortBy;
-    // const sortDir = req.params.sortDir;
-    const response = yield (0, services_1.getAllPostsService)();
+    const _pageNumber = req.query.pageNumber;
+    const pageNumber = _pageNumber === undefined || Number.isNaN(_pageNumber)
+        ? 1
+        : +_pageNumber;
+    const _pageSize = req.query.pageSize;
+    const pageSize = _pageSize === undefined || Number.isNaN(_pageSize) ? 10 : +_pageSize;
+    const sortBy = req.query.sortBy === undefined
+        ? "post_id"
+        : req.query.sortBy;
+    const sortDir = req.query.sortDir === undefined ? "asc" : req.query.sortDir;
+    const response = yield (0, services_1.getAllPostsService)(pageNumber, pageSize, sortBy, sortDir);
     res.status(200).json(response);
 });
 exports.getAllPosts = getAllPosts;
 const getPostsById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _postId = req.params.postId;
     const postId = +_postId;
-    const response = (0, services_1.getPostsByIdService)(postId);
+    console.log("postId", postId);
+    const response = yield (0, services_1.getPostsByIdService)(postId);
     res.status(200).json(response);
 });
 exports.getPostsById = getPostsById;

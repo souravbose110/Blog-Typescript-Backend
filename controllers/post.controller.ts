@@ -58,17 +58,30 @@ export const getPostsByCategory = async (req: Request, res: Response) => {
 };
 
 export const getAllPosts = async (req: Request, res: Response) => {
-    // const _pageNumber = req.params.pageNumber;
-    // const pageNumber: number = +_pageNumber;
+    const _pageNumber = req.query.pageNumber;
+    const pageNumber: number =
+        _pageNumber === undefined || Number.isNaN(_pageNumber)
+            ? 1
+            : +_pageNumber;
 
-    // const _pageSize = req.params.pageSize;
-    // const pageSize: number = +_pageSize;
+    const _pageSize = req.query.pageSize;
+    const pageSize: number =
+        _pageSize === undefined || Number.isNaN(_pageSize) ? 10 : +_pageSize;
 
-    // const sortBy = req.params.sortBy;
+    const sortBy =
+        req.query.sortBy === undefined
+            ? "post_id"
+            : (req.query.sortBy as string);
 
-    // const sortDir = req.params.sortDir;
+    const sortDir =
+        req.query.sortDir === undefined ? "asc" : (req.query.sortDir as string);
 
-    const response = await getAllPostsService();
+    const response = await getAllPostsService(
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDir
+    );
 
     res.status(200).json(response);
 };
@@ -76,8 +89,9 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const getPostsById = async (req: Request, res: Response) => {
     const _postId = req.params.postId;
     const postId = +_postId;
+    console.log("postId", postId);
 
-    const response = getPostsByIdService(postId);
+    const response = await getPostsByIdService(postId);
 
     res.status(200).json(response);
 };

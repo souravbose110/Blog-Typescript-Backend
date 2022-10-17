@@ -18,3 +18,4 @@ __exportStar(require("./user.controller"), exports);
 __exportStar(require("./category.controller"), exports);
 __exportStar(require("./comment.controller"), exports);
 __exportStar(require("./post.controller"), exports);
+__exportStar(require("./auth.controller"), exports);
